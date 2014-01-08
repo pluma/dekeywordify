@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="dekeywordify : escape reserved property keyword names" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>dekeywordify</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/pluma/dekeywordify">View on GitHub</a>
+
+          <h1 id="project_title">dekeywordify</h1>
+          <h2 id="project_tagline">escape reserved property keyword names</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/pluma/dekeywordify/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/pluma/dekeywordify/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="synopsis" class="anchor" href="#synopsis"><span class="octicon octicon-link"></span></a>Synopsis</h1>
+
+<p><strong>dekeywordify</strong> is a <a href="https://github.com/substack/node-browserify">browserify</a> transform for escaping property names that use reserved keywords.</p>
+
+<p>Note that in order to be thorough, <code>dekeywordify</code> currently transforms the entire source code into an abstract syntax tree and back. This may cause problems with browserify's source maps. Or not.</p>
+
+<p>This library uses <a href="https://github.com/benbria/browserify-transform-tools">browserify-transform-tools</a>, so you can also supply the configuration by adding a <code>dekeywordify</code> field to your project's <code>package.json</code> file.</p>
+
+<p><a href="https://travis-ci.org/pluma/dekeywordify"><img src="https://travis-ci.org/pluma/dekeywordify.png?branch=master" alt="Build Status"></a> <a href="http://badge.fury.io/js/dekeywordify"><img src="https://badge.fury.io/js/dekeywordify.png" alt="NPM version"></a> <a href="https://david-dm.org/pluma/dekeywordify"><img src="https://david-dm.org/pluma/dekeywordify.png" alt="Dependencies"></a></p>
+
+<h1>
+<a name="rationale" class="anchor" href="#rationale"><span class="octicon octicon-link"></span></a>Rationale</h1>
+
+<p>When your favourite library's API was developed with only modern JavaScript engines in mind and you suddenly find yourself with code using reserved keywords as property names all over the place, this transform saves you the trouble of having to escape all references with their string literal equivalents.</p>
+
+<h1>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
+
+<h2>
+<a name="nodejs" class="anchor" href="#nodejs"><span class="octicon octicon-link"></span></a>Node.js</h2>
+
+<h3>
+<a name="with-npm" class="anchor" href="#with-npm"><span class="octicon octicon-link"></span></a>With NPM</h3>
+
+<div class="highlight highlight-sh"><pre>npm install dekeywordify
+</pre></div>
+
+<h3>
+<a name="from-source" class="anchor" href="#from-source"><span class="octicon octicon-link"></span></a>From source</h3>
+
+<div class="highlight highlight-sh"><pre>git clone https://github.com/pluma/dekeywordify.git
+<span class="nb">cd </span>dekeywordify
+npm install
+make <span class="nb">test</span>
+</pre></div>
+
+<h1>
+<a name="basic-usage-example" class="anchor" href="#basic-usage-example"><span class="octicon octicon-link"></span></a>Basic usage example</h1>
+
+<h2>
+<a name="source" class="anchor" href="#source"><span class="octicon octicon-link"></span></a>Source</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">doSomething</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">doMoreThings</span><span class="p">).</span><span class="k">finally</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">({</span><span class="kd">var</span><span class="o">:</span> <span class="nx">arg</span><span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="result" class="anchor" href="#result"><span class="octicon octicon-link"></span></a>Result</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">doSomething</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">doMoreThings</span><span class="p">)[</span><span class="s1">'finally'</span><span class="p">](</span><span class="kd">function</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">({</span><span class="s1">'var'</span><span class="o">:</span> <span class="nx">arg</span><span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">browserify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'browserify'</span><span class="p">),</span>
+    <span class="nx">dekeywordify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'dekeywordify'</span><span class="p">),</span>
+    <span class="nx">b</span> <span class="o">=</span> <span class="nx">browserify</span><span class="p">();</span>
+
+<span class="nx">b</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">dekeywordify</span><span class="p">);</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'./app.js'</span><span class="p">);</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">bundle</span><span class="p">().</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">).</span><span class="nx">createWriteStream</span><span class="p">(</span><span class="s1">'bundle.js'</span><span class="p">));</span>
+</pre></div>
+
+<h1>
+<a name="usage-example-with-configure" class="anchor" href="#usage-example-with-configure"><span class="octicon octicon-link"></span></a>Usage example with configure</h1>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">browserify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'browserify'</span><span class="p">),</span>
+    <span class="nx">dekeywordify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'dekeywordify'</span><span class="p">),</span>
+    <span class="nx">b</span> <span class="o">=</span> <span class="nx">browserify</span><span class="p">();</span>
+
+<span class="nx">b</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">dekeywordify</span><span class="p">.</span><span class="nx">configure</span><span class="p">({</span>
+    <span class="nx">allow</span><span class="o">:</span> <span class="p">[</span><span class="s2">"debugger"</span><span class="p">],</span> <span class="c1">// keywords that should not be escaped</span>
+    <span class="nx">extra</span><span class="o">:</span> <span class="p">[</span><span class="s2">"cheese"</span><span class="p">]</span> <span class="c1">// additional property names to escape</span>
+<span class="p">}));</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'./app.js'</span><span class="p">);</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">bundle</span><span class="p">().</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">).</span><span class="nx">createWriteStream</span><span class="p">(</span><span class="s1">'bundle.js'</span><span class="p">));</span>
+</pre></div>
+
+<h1>
+<a name="usage-example-with-packagejson" class="anchor" href="#usage-example-with-packagejson"><span class="octicon octicon-link"></span></a>Usage example with package.json</h1>
+
+<h2>
+<a name="packagejson" class="anchor" href="#packagejson"><span class="octicon octicon-link"></span></a>package.json</h2>
+
+<div class="highlight highlight-json"><pre><span class="p">{</span>
+    <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"my-awesome-project"</span><span class="p">,</span>
+    <span class="nt">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"browserify"</span><span class="p">:</span> <span class="s2">"*"</span><span class="p">,</span>
+        <span class="nt">"dekeywordify"</span><span class="p">:</span> <span class="s2">"*"</span>
+    <span class="p">},</span>
+    <span class="nt">"dekeywordify"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">"allow"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"debugger"</span><span class="p">],</span>
+        <span class="nt">"forbid"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"cheese"</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+
+<h3>
+<a name="usage-api" class="anchor" href="#usage-api"><span class="octicon octicon-link"></span></a>Usage (API)</h3>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">browserify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'browserify'</span><span class="p">),</span>
+    <span class="nx">dekeywordify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'dekeywordify'</span><span class="p">),</span>
+    <span class="nx">b</span> <span class="o">=</span> <span class="nx">browserify</span><span class="p">();</span>
+
+<span class="nx">b</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="nx">dekeywordify</span><span class="p">);</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s1">'./app.js'</span><span class="p">);</span>
+<span class="nx">b</span><span class="p">.</span><span class="nx">bundle</span><span class="p">().</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">).</span><span class="nx">createWriteStream</span><span class="p">(</span><span class="s1">'bundle.js'</span><span class="p">));</span>
+</pre></div>
+
+<h3>
+<a name="usage-shell" class="anchor" href="#usage-shell"><span class="octicon octicon-link"></span></a>Usage (Shell)</h3>
+
+<div class="highlight highlight-sh"><pre>browserify -t dekeywordify ./app.js &gt; bundle.js
+</pre></div>
+
+<h1>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h1>
+
+<h2>
+<a name="dekeywordifyconfigureconfigtransform" class="anchor" href="#dekeywordifyconfigureconfigtransform"><span class="octicon octicon-link"></span></a>dekeywordify.configure(config):transform</h2>
+
+<p>Creates a browserify transform that will use the given <code>config</code>:</p>
+
+<h3>
+<a name="configusedefaultsboolean-default-true" class="anchor" href="#configusedefaultsboolean-default-true"><span class="octicon octicon-link"></span></a>config.useDefaults:Boolean (default: true)</h3>
+
+<p>Whether to use the built-in keyword list (containing all keywords of ES5 in addition to the reserved future keyword list from ES3). If set to <code>false</code>, only the keywords listed in <code>config.extra</code> will be escaped.</p>
+
+<h3>
+<a name="configallow-optional" class="anchor" href="#configallow-optional"><span class="octicon octicon-link"></span></a>config.allow (optional)</h3>
+
+<p>An array of property names that should not be escaped even if they are (reserved) keywords.</p>
+
+<h3>
+<a name="configextra-optional" class="anchor" href="#configextra-optional"><span class="octicon octicon-link"></span></a>config.extra (optional)</h3>
+
+<p>An array of property names that should be escaped in addition to the keywords.</p>
+
+<h1>
+<a name="unlicense" class="anchor" href="#unlicense"><span class="octicon octicon-link"></span></a>Unlicense</h1>
+
+<p>This is free and unencumbered public domain software. For more information, see <a href="http://unlicense.org/">http://unlicense.org/</a> or the accompanying <a href="https://github.com/pluma/dekeywordify/blob/master/UNLICENSE">UNLICENSE</a> file.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">dekeywordify maintained by <a href="https://github.com/pluma">pluma</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
