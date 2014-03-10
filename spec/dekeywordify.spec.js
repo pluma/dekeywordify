@@ -13,7 +13,7 @@ describe('dekeywordify', function() {
       data += chunk;
     });
     tr.on('end', function() {
-      expect(data).to.equal("var foo = { 'finally': true };")
+      expect(data).to.equal('var foo = { \'finally\': true };');
       done();
     });
     tr.write('var foo = {finally: true};');
@@ -26,7 +26,7 @@ describe('dekeywordify', function() {
       data += chunk;
     });
     tr.on('end', function() {
-      expect(data).to.equal("foo()['finally'](bar);")
+      expect(data).to.equal('foo()[\'finally\'](bar);');
       done();
     });
     tr.write('foo().finally(bar);');
