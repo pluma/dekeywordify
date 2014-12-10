@@ -22,7 +22,12 @@ module.exports = transformTools.makeStringTransform('dekeywordify', {}, function
       return !~config.allow.indexOf(kw);
     });
   }
-  var ast = esprima.parse(src);
+  var ast;
+  try {
+    ast = esprima.parse(src);
+  } catch (e) {
+    return done(null, src);
+  }
   var modified = false;
   traverse(ast, {
     pre: function(node, parent) {
