@@ -1,7 +1,7 @@
 {
   "name": "dekeywordify",
   "author": "Alan Plum <me@pluma.io>",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "licenses": {
     "type": "UNLICENSE",
     "url": "https://github.com/pluma/dekeywordify/blob/master/UNLICENSE"
